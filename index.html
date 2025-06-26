@@ -133,41 +133,54 @@
 
   <form id="registro-form">
     <h2>Confirma tu Asistencia</h2>
-    <input type="text" name="familia" placeholder="Nombre de la familia" required />
+    <input type="text" name="familia" placeholder="Nombre de la familia o persona quien registra" required />
     <input type="number" name="personas" placeholder="Número de personas" required min="1" />
     <button type="submit">Registrar</button>
   </form>
 
   <script>
-    const evento = new Date("2025-07-12T00:00:00");
-    const countdownEl = document.getElementById("countdown");
+  const evento = new Date("2025-07-12T00:00:00");
+  const countdownEl = document.getElementById("countdown");
 
-    function actualizarContador() {
-      const ahora = new Date();
-      const diferencia = evento - ahora;
+  function actualizarContador() {
+    const ahora = new Date();
+    const diferencia = evento - ahora;
 
-      if (diferencia <= 0) {
-        countdownEl.innerHTML = "¡Hoy es el gran día! 🎉";
-        return;
-      }
-
-      const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-      const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
-      const minutos = Math.floor((diferencia / (1000 * 60)) % 60);
-      const segundos = Math.floor((diferencia / 1000) % 60);
-
-      countdownEl.innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+    if (diferencia <= 0) {
+      countdownEl.innerHTML = "¡Hoy es el gran día! 🎉";
+      return;
     }
 
-    setInterval(actualizarContador, 1000);
-    actualizarContador();
+    const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
+    const minutos = Math.floor((diferencia / (1000 * 60)) % 60);
+    const segundos = Math.floor((diferencia / 1000) % 60);
 
-    document.getElementById("registro-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      alert("¡Gracias por registrarte! 😄");
-      this.reset();
+    countdownEl.innerHTML = `${dias}d ${horas}h ${minutos}m ${segundos}s`;
+  }
+
+  setInterval(actualizarContador, 1000);
+  actualizarContador();
+
+  document.getElementById("registro-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const familia = this.familia.value.trim();
+    const personas = this.personas.value.trim();
+
+    fetch("https://script.google.com/macros/s/AKfycbxABbe_OAOf7K4wfsl03HVkp-azy1BSREiiAgz62f-z8bNUT6jxdk5-5Y5kRxb6KGaw7w/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ familia, personas })
     });
-  </script>
+
+    alert("¡Gracias por registrarte! 😄");
+    this.reset();
+  });
+</script>
 
 </body>
 </html>
